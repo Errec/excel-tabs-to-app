@@ -34,7 +34,7 @@ if uploaded_file is not None:
         filters = {}
 
         for col in df.columns:
-            if pd.api.types.is_numeric_dtype(df[col]):
+            if pd.api.types.is_numeric_dtype(col):
                 min_val, max_val = float(df[col].min()), float(df[col].max())
                 selected_range = st.sidebar.slider(
                     f"{col} range", min_val, max_val, (min_val, max_val)
