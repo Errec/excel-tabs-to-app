@@ -23,7 +23,7 @@ if uploaded_file is not None:
         # Load selected sheet
         df = pd.read_excel(xls, sheet_name=selected_sheet)
 
-        # Sheet info
+        # Sheet info display
         st.subheader(f"📄 Sheet: {selected_sheet}")
         st.caption(f"Rows: {df.shape[0]} | Columns: {df.shape[1]}")
         with st.expander("🔍 Data Preview"):
@@ -34,7 +34,7 @@ if uploaded_file is not None:
         filters = {}
 
         for col in df.columns:
-            if pd.api.types.is_numeric_dtype(col):
+            if pd.api.types.is_numeric_dtype(df[col]):
                 min_val, max_val = float(df[col].min()), float(df[col].max())
                 selected_range = st.sidebar.slider(
                     f"{col} range", min_val, max_val, (min_val, max_val)
@@ -63,7 +63,7 @@ if uploaded_file is not None:
         st.subheader("📊 Filtered Data")
         st.dataframe(filtered_df, use_container_width=True)
 
-        # Download filtered data
+        # Download filtered data as CSV
         if not filtered_df.empty:
             csv = filtered_df.to_csv(index=False).encode('utf-8')
             st.download_button(
