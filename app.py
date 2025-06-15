@@ -4,7 +4,6 @@ import pandas as pd
 st.set_page_config(page_title="Excel Tab Viewer", layout="wide")
 st.title("📑 Excel Tab Viewer")
 
-# Upload Excel file
 uploaded_file = st.file_uploader("Upload your Excel file (.xlsx)", type=["xlsx"])
 
 if uploaded_file is not None:
@@ -15,15 +14,15 @@ if uploaded_file is not None:
 
         st.sidebar.header("Settings")
 
-        # Dropdown to select sheet
+        # Sheet selector
         selected_sheet = st.sidebar.selectbox(
             "Select Sheet (Tab)", sheet_names, index=0
         )
 
-        # Load selected sheet
-        df = pd.read_excel(xls, sheet_name=selected_sheet)
+        # Load and clean data (drop fully empty rows)
+        df = pd.read_excel(xls, sheet_name=selected_sheet).dropna(how='all')
 
-        # Sheet info display
+        # Display sheet info
         st.subheader(f"📄 Sheet: {selected_sheet}")
         st.caption(f"Rows: {df.shape[0]} | Columns: {df.shape[1]}")
         with st.expander("🔍 Data Preview"):
@@ -63,7 +62,7 @@ if uploaded_file is not None:
         st.subheader("📊 Filtered Data")
         st.dataframe(filtered_df, use_container_width=True)
 
-        # Download filtered data as CSV
+        # Download filtered data
         if not filtered_df.empty:
             csv = filtered_df.to_csv(index=False).encode('utf-8')
             st.download_button(
